@@ -31,7 +31,7 @@ export AGENT_CONFDIR="/etc/observium"
 # Make sure, locally installed binaries are found
 PATH=$PATH:/usr/local/bin
 
-# All executables in SCRIPTSDIR and LOCALDIR will simply be executed 
+# All executables in SCRIPTSDIR and LOCALDIR will simply be executed
 # and their ouput appended to the output of the agent. Scripts define
 # their own sections and must output headers with '<<<' and '>>>'
 # LOCALDIR is included for backwards compatibility with agents < 1.1.x
@@ -132,7 +132,7 @@ if which ethtool > /dev/null
 then
     for eth in $(sed -e 1,2d < /proc/net/dev | cut -d':' -f1)
     do
-      echo "[$eth]" 
+      echo "[$eth]"
       ethtool $eth | egrep '(Speed|Duplex|Link detected|Auto-negotiation):'
     done
 fi
