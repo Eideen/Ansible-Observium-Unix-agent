@@ -1,2 +1,14 @@
 ---
 # defaults file for ansible-observium-unixagent
+
+# multipalbe ip or ip-range with space
+observium_agent_client_IP: 192.168.2.8
+### ['apache', 'areca-hw', 'asterisk', 'bind', 'ceph', 'crashplan', 'dhcpkit', 'dmi', 'dovecot', 'dpkg', 'drbd', 'edac', 'exim-mailqueue-extended.pl', 'exim-mailqueue.sh', 'exim_stats_process.pl', 'freeradius', 'freeradius.conf.sample', 'freeradius.sh', 'hdarray', 'hddtemp', 'ioping', 'ioping.cnf', 'ipmitool-sensor', 'jvm-over-jmx', 'kamailio', 'ksm', 'lighttpd', 'lmsensors', 'lvs_stats', 'memcached', 'mongodb', 'munin', 'munin-scripts', 'mysql', 'mysql.cnf', 'nfs', 'nfsd', 'nginx', 'nsd', 'ntpd', 'nvidia-smi', 'openvpn', 'postfix_mailgraph', 'postfix_qshape', 'postgresql.conf', 'postgresql.pl', 'powerdns', 'powerdns-recursor', 'proxmox-qemu', 'raspberrypi', 'README', 'rpm', 'sabnzbd-qstatus', 'shoutcast', 'shoutcast.conf', 'shoutcast.default.conf', 'temperature', 'unbound', 'varnish', 'virt-what', 'vmwaretools', 'zimbra', 'zyxel-nas326', ]
+agent_packages: [ 'xinetd', 'php', 'perl', 'python3', 'php-cli', 'php-mysql']
+
+agent_additional_packages: []
+
+agent_directorys:
+  - /usr/lib/observium_agent/local
+
+agent_additional_scripts: []

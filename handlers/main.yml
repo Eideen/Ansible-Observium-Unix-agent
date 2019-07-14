@@ -1,8 +1,13 @@
 ---
 # handlers file for ansible-observium-unixagent
 
-- name: restart xinetd
+- name: xinetd restart
   become: true
   service:
     name: xinetd
+    state: restarted
+
+- name: restart lighttpd
+  service:
+    name: lighttpd
     state: restarted

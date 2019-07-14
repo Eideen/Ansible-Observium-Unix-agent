@@ -1,0 +1,74 @@
+---
+# tasks file for ansible-observium-unixagent
+- name: 'linux : packages to install'
+  debug:
+    msg:  "{{ agent_packages + agent_additional_packages }}"
+
+- name: 'linux : install packages'
+  become: true
+  package:
+    name: "{{ agent_packages + agent_additional_packages }}"
+  tags:
+    - packages
+
+- name: 'linux : copying xinetd configuration file'
+  template:
+    src: 'agent_xinetd.j2'
+    dest: '/etc/xinetd.d/observium_agent_xinetd'
+    owner: root
+    group: root
+    mode: 0644
+  notify: xinetd restart
+
+
+- name: 'linux : copying agent progam'
+  copy:
+    src: observium-agent.sh
+    dest: /usr/bin/observium_agent
+    owner: root
+    group: root
+    mode: 0755
+  notify: xinetd restart
+
+- name: "linux : directorys for agent"
+  file:
+    state: directory
+    path: /usr/lib/observium_agent/local
+#    path: "{{ agent_directorys }}"
+    owner: root
+    group: root
+  notify: xinetd restart
+
+- name: "linux : copy scripts"
+  template:
+    src: "agent-local/{{ item }}"
+    dest: /usr/lib/observium_agent/local
+    mode: 0755
+  with_items:
+    - "{{ agent_scripts }}"
+    - "{{ agent_additional_scripts }}"
+  notify: xinetd restart
+
+- name: "linux :list files not listed"
+  find:
+    paths: /usr/lib/observium_agent/local
+    excludes: "{{ agent_scripts + agent_additional_scripts }}"
+  register: find_result
+  notify: xinetd restart
+
+- debug:
+   var: "{{find_result.matched}}"
+  #  var: "{{ item.path }}"
+  # with_items: "{{find_result.files}}"
+
+- name: "linux :remove files not listed"
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  when: find_result.matched > 0
+  with_items:  "{{find_result.files}}"
+  notify: xinetd restart
+
+- name: "linux : include lighttpd taks"
+  include_tasks: program/lighttpd.yml
+  when: ('"lighttpd" in agent_scripts') or ('"lighttpd" in agent_additional_scripts')
