@@ -1,38 +1,57 @@
-Role Name
+Ansible Observium Unix agent
 =========
 
-A brief description of the role goes here.
+Role to install Observium Unix agent on Linux.
+
+Will remove undefine scripts.
+
+If lighttpd is used it will modify `10-status.conf` to enable monitoring.
+
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* None
 
 Role Variables
 --------------
+* observium_agent_client_IP: Defines what host is allowed to connect over telnet. accepts:
+  - 192.168.0.0 # range
+  - 192.168.0.1/24 # subnet range
+  - 192.168.0.2 # Singel IP
+  - 192.168.0.2 192.168.2.0 # combination of address's.
+* agent_packages: Defines a list of packages to be installed as part of the role
+* agent_additional_packages: Is a user/playlist defines list.
+* agent_director: Where the script are installed
+* agent_scripts: normally defined in vars/
+* agent_additional_scripts: Is a user/playlist defines list.
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Any script not listed by `agent_scripts` and `agent_additional_scripts`, is removed. Only works with files.
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- None
 
 Example Playbook
 ----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
+````
+- hosts: observium-targes
       roles:
-         - { role: username.rolename, x: 42 }
-
+         - { role: ansible-observium-unixagent,
+           x: 42 }
+      vars:
+        agent_additional_scripts: ['hddtemp', 'mysql']
+        observium_agent_client_IP: 192.168.2.8
+````
 License
 -------
 
-BSD
+GPL-2.0-or-later
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+role author: Torstein Eide
+git-repository:
