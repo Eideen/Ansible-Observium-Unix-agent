@@ -1,0 +1,17 @@
+---
+# tasks file for ansible-observium-unixagent
+
+- name: "lighttpd: enable status mod"
+  command: lighttpd-enable-mod status
+  register: lighttpd_result
+  changed_when: '"Enabling status: ok" in lighttpd_result.stdout'
+  failed_when: '"unknown" in lighttpd_result.stdout'
+  notify: restart lighttpd
+
+- name: modifing conf-available_10-status.conf
+  lineinfile:
+   path: /etc/lighttpd/conf-available/10-status.conf
+   line: '$HTTP["remoteip"] == "127.0.0.1" { status.status-url = "/server-status"}'
+   regexp: '^\$HTTP\["remoteip"\] ==.* { status.status-url = "/server-status"}'
+   insertafter: 'status.status-url = "/server-status'
+  notify: restart lighttpd

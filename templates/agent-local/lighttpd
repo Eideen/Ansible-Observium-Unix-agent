@@ -28,10 +28,13 @@ USER=""
 PASSWORD=""
 
 $WGET --user=$USER --password=$PASSWORD -q -O - $STATUS_URL?auto > $LIGHTTPD_TEMPFILE
-if [ -s $LIGHTTPD_TEMPFILE ]; then
+if [ grep total $LIGHTTPD_TEMPFILE ]; then
+	echo "Can't connect to $STATUS_URL" > $ERRORS_TEMPFILE
+elif [ -s $LIGHTTPD_TEMPFILE ]; then
+	#statements
 	totalaccesses=$(grep 'Total Accesses' $LIGHTTPD_TEMPFILE | cut -d' ' -f3)
 	totalkbytes=$(grep 'Total kBytes' $LIGHTTPD_TEMPFILE | cut -d' ' -f3)
-	uptime=$(grep 'Uptime' $LIGHTTPD_TEMPFILE | cut -d' ' -f2)	
+	uptime=$(grep 'Uptime' $LIGHTTPD_TEMPFILE | cut -d' ' -f2)
 	busyservers=$(grep 'BusyServers' $LIGHTTPD_TEMPFILE | cut -d' ' -f2)
 	idleservers=$(grep 'IdleServers' $LIGHTTPD_TEMPFILE | cut -d' ' -f2)
 	connectionsp=$(grep 'Scoreboard' $LIGHTTPD_TEMPFILE | cut -d' ' -f2 | grep -o '\.' | wc -w)
