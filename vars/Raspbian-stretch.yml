@@ -1,0 +1,6 @@
+---
+# vars file for ansible-observium-unixagent
+agent_scripts:
+  - raspberrypi
+  - lighttpd
+  - dpkg
